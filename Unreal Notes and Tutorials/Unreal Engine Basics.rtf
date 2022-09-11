@@ -103,10 +103,44 @@ Enemy Spawn System:\par
 \tab 5.3 - Call a Branch Function, the Condition will be the same as section 3;\par
 \tab 5.4 - If True From the Branch will call the Event Spawn Enamy Function, using the same variables as Location, Enemy and Number of Enemies;\par
 \tab 5.5 - If False from ther Branch will call Should Spawn? Function;\b\fs30\par
-\tab\par
 \par
+Enemy and Player Bullets:\par
+\b0\fs22 (Section was extracted from Unreal Forums, editing pending).\par
+To start you need to create a projectile actor: right click components window, select blueprint, then select actor in the new window. Next add a mesh that has collision and add a projectile movement component. You could also make your own movement method if you were so inclined. Next select the movement component and set its initial and max speed (1000 or more should work for now). Now go to the event graph and right click and search for event hit. Drag off event hit and search for destroy actor. Then connect the other actor pin from the event hit to the target on the destroy actor. This will result in the projectile destroying any actor it touches.\par
+Next we will need to create a method to spawn the projectile. To do this open your cube character or pawn (the thing that you control, which im going to call character from here out). In the character go to the event graph and right click and search for the input event that you want (any key will do). Now drag off the input and search for spawn actor from class. set the class to that of your projectile. All thats left now is to set the spawn location and rotation. For location the simplest method will be to add a scene component to your character and place it where you want the projectile to spawn, this way it wont be overlapping your character when it spawns which would be bad (itd destroy your character). Then get the scene components world location and plug that into the spawn actor node (you may need to split the transform struct pin on the spawn actor node). For rotation just get your actors rotation and plug that into the spawn node. That should be all.\b\fs30\par
 \par
-\par
+Game Over Menu:\par
+\b0\fs22 1 - In your player blueprint set the Health System similar to the enemy's, after the Destroy Actor function do the following:\par
+\tab 1.1 - Call Create Widget function;\par
+\tab 1.2 - Set the Class for your Game Over Screen Widget;\par
+\tab 1.3 - Call View Port function, link the sequence and and Target from Create Widget function;\b\fs30\par
+\tab\b0\fs22 1.4 - Call Set Show Mouse Cursor function, check the Show Mouse option and link the Target to a Get Player Controller function;\par
+\tab 1.5 - Call Set Game Paused Function;\par
+2 -In your Blueprint folder, right click, then User Interface, then Widget Blueprint, then do the following:\par
+\tab 2.1 - Make the Screen as you wish, adding background and buttons;\par
+\tab 2.2 - On the Event Graph add the Quit Game Button Variable, link it to a Quit Game function;\par
+\tab 2.3 - Add the Retry Button Variable and link it to the Open Level Function, select the level you want to restart from and link it to a Show Mouse Cursor function, do not check the show mouse option, finally link it's target to a Get Player Controller function;\par
+\tab 2.4 - Add the Return to Title Button Varaible, call a Romve from Parente function, link it to a Create New Widget function, select the Main Menu Widget for class and finally link it to a Add to Viewport functio;\par
+\b\fs30\par
+Game Start Menu:\par
+\b0\fs22 1 - Create  a new map called Main Menu map;\par
+2 - Open the level blueprint and do the following:\par
+\tab 2.1 - Call Event BeginPlay;\par
+\tab 2.2 - Call Create Main Menu Widget Function and set the Class for the Main Menu Widget (See Game Over Menu sectino for Widget Creation);\par
+\tab 2.3 - Call Add Viewport Function and link it to the Create Main Menu Widget Function both for link and target;\par
+\tab 2.4 - Call Set Input Mode UI Only Function and link it to the Add Viewport, also link player controller to Get Player Controller Function;\par
+\tab 2.5 - Finally, call Set Show Mouse Cursor, link target to Get Player Controller Function and check the show mouse cursor checkbox;\par
+ 3 - For the Widget Menu do the following:\par
+\tab 3.1 - Add a Canvas Panel and a WidgetSwitcher inside the Canvas;\par
+\tab 3.2 - Inside the Widget Switcher add the buttons for the menu(Start, Quit and Credits);\par
+\tab 3.3 -For the Start game do the following:\par
+\tab\tab 3.3.1 - Call the On Clicked Event, link it to a Set Input Mode Game Only Function, link the controller to a Set Player Controller Function and lastly call the Open Level Function, set the level you want to start with;\par
+\tab 3.4 - For the Credits do the following:\par
+\tab\tab 3.4.1 -  On the Widget Switcher add another Canvas called Credits;\par
+\tab\tab 3.4.2 - Inside the Credits Canvas add the credits texts and a button to go back to the main menu;\par
+\tab\tab 3.4.3 - On the Graph, call the On Clicked Event for the Credits button and link it to a Set Active Widget Index Function, link the target to the Widget Switcher;\par
+\tab\tab 3.4.4 - Call the On Clicked Event for the "Back to menu" button from the credits canvas and link it to another Set Active Widget Index Function, set it's index to 1 and link the target to the Widget Switcher;\par
+\tab 3.5 - For the Quit Button just make the same way it was done on the Game Over Menu Section;\b\fs30\par
 \par
 \par
 \par
